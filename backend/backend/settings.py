@@ -25,16 +25,22 @@ CORS_ORIGIN_WHITELIST = [
 # Application definition
 
 INSTALLED_APPS = [
+    # Django Configs
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backend_app.apps.BackendAppConfig',
+    # 3rd Party Libraries
     'rest_framework',
     'channels',
-    'corsheaders'
+    'corsheaders',
+     # My apps
+    'spotify_connect.apps.SpotifyConnectConfig',
+    'user_management.apps.UserManagementConfig',
+    'suggest_vote_management.apps.SuggestVoteManagementConfig',
+    'backend_app.apps.BackendAppConfig',
 ]
 
 MIDDLEWARE = [
