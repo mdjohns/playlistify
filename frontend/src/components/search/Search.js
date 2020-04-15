@@ -28,20 +28,53 @@ const testResults = [
     "album": "Test: The Album 3",
     "album_art": "https://i.scdn.co/image/8522fc78be4bf4e83fea8e67bb742e7d3dfe21b4"
   },
+  {
+    "title": "Banana",
+    "artist": "Bananaphone",
+    "album": "Banana",
+    "album_art": "https://i.scdn.co/image/8522fc78be4bf4e83fea8e67bb742e7d3dfe21b4"
+  }
 ]
 
-export default function Search() {
-  return (
-    <div>
-      <InputGroup>
-        <InputGroup.Prepend>
-          <InputGroup.Text id="basic-addon1">🎵</InputGroup.Text>
-        </InputGroup.Prepend>
-        <FormControl placeholder="Search for a track">
-        </FormControl>
-      </InputGroup>
-      
-      <Results searchResults={testResults}/>
-    </div>
-  )
+export default class Search extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      query: ""
+    }
+  }
+
+  handleInput = () => {
+    let value = document.querySelector("#search-box").value;
+    
+    if (value.length >= 2) {
+      this.setState({
+        query: value
+      })
+    }
+
+    console.log(this.state.query)
+    
+  }
+
+  render() {
+    return (
+      <div>
+        <InputGroup>
+          <InputGroup.Prepend>
+            <InputGroup.Text id="basic-addon1">🎵</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl 
+            ref={input => this.search = input}
+            placeholder="Search for a track" 
+            id="search-box"
+            onChange={this.handleInput}>
+          </FormControl>
+        </InputGroup>
+        
+        <Results searchResults={""}/>
+      </div>
+    )
+  }
 }

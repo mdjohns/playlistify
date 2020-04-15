@@ -9,6 +9,9 @@ import Alert from 'react-bootstrap/Alert';
 
 
 export default function RegisterHost(props) {
+  const registerHost = () => {
+    alert("Submitted!")
+  }
   return (
     <div>
       <div>
@@ -18,7 +21,7 @@ export default function RegisterHost(props) {
         </Alert>
 
       </div>
-      <Form>
+      <Form onSubmit={registerHost}>
         <Form.Group controlId="formUsername">
           <Form.Label>Username</Form.Label>
           <Form.Control type="text" placeholder="Enter a username"/>

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 
 // Component imports
-import SuggestionModal from './SuggestionModal';
 
 /* 
   This component: 
@@ -95,35 +94,20 @@ export default class Results extends React.Component {
     super(props);
 
     this.state = {
-      modalOpen: false
     }
 
   }
-
-  toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen
-    })
-  }
-
-
   
   render() {
     return (
       <div>
-        <button onClick={this.toggleModal}>
-          Open the modal
-        </button>
-
-        <SuggestionModal 
-          songTitle="testing!" 
-          
-        />
-       {this.props.searchResults.map(result => 
-        <div>
-          {createResultCard(result)}
-        </div>
-        )}
+        { !this.props.searchResults ? null :
+          this.props.searchResults.map(result => 
+          <div>
+            {createResultCard(result)}
+          </div>
+          )
+        }
       </div>
     )
   }

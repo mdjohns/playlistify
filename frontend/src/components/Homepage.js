@@ -26,13 +26,11 @@ const StyledAlert = styled(Alert)`
   text-align: center;
 `
 
-// Config variables
-const alertMessage = "Select an option to get started"
 
 export default function Homepage() {
   return (
     <React.Fragment>
-      <StyledAlert variant="secondary" >{ alertMessage }</StyledAlert>
+      <StyledAlert variant="secondary" >Select an option to get started</StyledAlert>
 
       <Container>
         <ContainerRow>

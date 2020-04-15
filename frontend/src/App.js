@@ -8,21 +8,44 @@ import {
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-// Component Imports
+// General UI Components
 import NavBar from './components/NavBar';
 import Homepage from './components/Homepage';
-import Test from './components/Test';
-import RegisterHost from './components/RegisterHost';
-import JoinEvent from './components/JoinEvent';
+
+// Error Component
+import FourOhFour from './components/FourOhFour';
+
+// Registration Components
+import RegisterHost from './components/registration/RegisterHost';
+import LinkSpotify from './components/registration/LinkSpotify';
+import JoinEvent from './components/registration/JoinEvent';
+import InitPlaylist from './components/registration/InitPlaylist';
+
+// Search and Vote Components
+import Search from './components/search/Search';
+
+import VoteModal from './components/vote/VoteModal';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <NavBar />
-      </div>
+        
+      
       <Switch>
+        <Route path="/bbb">
+          <VoteModal />
+        </Route>
+
+        <Route path="/register/init_playlist">
+          <InitPlaylist />
+        </Route>
+
+        <Route path="/register/link_spotify">
+          <LinkSpotify />
+        </Route>
+
         <Route path="/register">
           <RegisterHost />
         </Route>
@@ -31,11 +54,21 @@ function App() {
           <JoinEvent />
         </Route>
 
-        <Route path="/">
+        <Route path="/search">
+          <Search />
+        </Route>
+
+        <Route exact path="/">
           <Homepage />
         </Route>
+
+        <Route path="*">
+          <FourOhFour />
+        </Route>
       </Switch>
+      </div>
     </Router>
+    
   );
 }
 
