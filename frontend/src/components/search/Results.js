@@ -1,8 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
-
-// Bootstrap imports
-import Button from 'react-bootstrap/Button';
+import React from "react";
+import styled from "styled-components";
 
 // Component imports
 
@@ -23,7 +20,7 @@ const AlbumArt = styled.div`
     height: 64px;
     width: 64px;
   }
-`
+`;
 
 const VoteButton = styled.button`
   background: green;
@@ -39,8 +36,9 @@ const VoteButton = styled.button`
   color: white;
   font-weight: bold;
   text-decoration: none;
-    
-`
+  margin-top: 12px;
+  margin-right: 4px;
+`;
 
 const SongInfo = styled.div`
   margin-right: auto;
@@ -63,52 +61,36 @@ const SongInfo = styled.div`
     padding: 0px;
     margin: 0px;
   }
-`
+`;
 //TODO: Add on-hover to make each card change color when hovered over
 const ResultContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   border: 1px solid black;
   border-radius: 4px;
-`
+`;
 
-function createResultCard(res) {
+function Results(props) {
   return (
-    <ResultContainer>
-      <AlbumArt>
-        <img src={res.album_art} />
-      </AlbumArt>
+    <div>
+      {!props.searchResults
+        ? null
+        : props.searchResults.map((result) => (
+            <ResultContainer key={result.id} id={result.id}>
+              <AlbumArt>
+                <img src={result.album_art} />
+              </AlbumArt>
 
-      <SongInfo>
-        <h1>{res.title}</h1>
-        <h2>{res.artist}</h2>
-        <h3>{res.album}</h3>
-      </SongInfo>
-      <VoteButton>+</VoteButton>
-    </ResultContainer>
-  )
+              <SongInfo>
+                <h1>{result.title}</h1>
+                <h2>{result.artist}</h2>
+                <h3>{result.album}</h3>
+              </SongInfo>
+              <VoteButton onClick={props.handleSuggestion}>+</VoteButton>
+            </ResultContainer>
+          ))}
+    </div>
+  );
 }
 
-export default class Results extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-    }
-
-  }
-  
-  render() {
-    return (
-      <div>
-        { !this.props.searchResults ? null :
-          this.props.searchResults.map(result => 
-          <div>
-            {createResultCard(result)}
-          </div>
-          )
-        }
-      </div>
-    )
-  }
-}
+export default Results;
