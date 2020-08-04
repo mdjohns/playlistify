@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -8,20 +8,9 @@ const jwksRsa = require("jwks-rsa");
 require("dotenv/config");
 
 const app = express();
+const serverPort = 4000;
 
 // Auth
-const checkJwt = jwt({
-  secret: jwksRsa.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: 'https://playlistfy-auth/.well-known/jwks.json'
-  }),
-
-  audience: 'https://playlistfy-auth',
-  issuer:
-  algorithms: ["RS256"]
-})
 
 // Middleware
 app.use(helmet());
@@ -34,8 +23,6 @@ const accountRoutes = require("./routes/account");
 // Routes
 app.use("/account", accountRoutes);
 
-app.get("/", (req, res) => {
-  res.send("We are on home!");
+app.listen(serverPort, () => {
+  console.log(`Server running on port ${serverPort}...`);
 });
-
-app.listen(3000);
