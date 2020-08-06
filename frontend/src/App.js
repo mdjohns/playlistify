@@ -5,12 +5,14 @@ import "./App.css";
 function App() {
   const [result, setResult] = useState();
   const clicked = () => {
-    const url = window.location.href;
-    const regex = new RegExp(/(?=\?)(.*)/);
-    const code = regex.search(url)[0];
-    fetch("http://localhost:4000/account/link_spotify" + code).then(
+    const currentUrl = window.location.href;
+    const codeQueryStr = currentUrl.substring(currentUrl.search(/(?=\?)(.*)/));
+    fetch("http://localhost:4000/account/link_spotify" + codeQueryStr).then(
       (response) => {
-        setResult(JSON.stringify(response));
+        console.log(response);
+        response.json().then((data) => {
+          console.log(data);
+        });
       }
     );
   };

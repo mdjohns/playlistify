@@ -18,8 +18,11 @@
     "helmet": "^3.23.3",
     "jwks-rsa": "^1.8.1",
     "mongodb": "^3.6.0",
+    "mongoose": "^5.9.27",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "qs": "^6.9.4",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",

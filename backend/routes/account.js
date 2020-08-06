@@ -1,17 +1,18 @@
-import express from "express";
+import express, { response } from "express";
 import axios from "axios";
+import qs from "qs";
 const router = express.Router();
 require("dotenv");
 
 /*
-************************************
+*****************************************************
 The Account route serves four endpoints.
 The endpoints only concern a "Host" user.
 1. Register a new Host.
-2. Authorize Playlistify.
+2. Authorize Playlistify with Host's Spotify account.
 3. Link Spotify credentials to Host.
 4. Login as an existing Host.
-************************************
+*****************************************************
 */
 
 // External Spotify URLs & resources
@@ -24,7 +25,7 @@ const scopes = [
   "user-read-currently-playing",
   "user-read-playback-position",
   "streaming",
-  "playlist-modify-public",
+  "playlist-modify-public"
 ].join(" ");
 
 let tokenPayload = {
@@ -32,7 +33,7 @@ let tokenPayload = {
   code: "", // returned from initial req
   redirect_uri: redirectUri,
   client_id: process.env.SPOTIFY_CLIENT_ID,
-  client_secret: process.env.SPOTIFY_CLIENT_SECRET,
+  client_secret: process.env.SPOTIFY_CLIENT_SECRET
 };
 
 router.post("/register", (req, res) => {
@@ -56,21 +57,33 @@ router.get("/authorize_spotify", (req, res) => {
 });
 
 router.get("/link_spotify", (req, res) => {
-  console.log(req.query.code);
-  axios
-    .post(tokenUrl, {
-      grant_type: "authorization_code",
-      code: req.query.code, // returned from initial req
-      redirect_uri: redirectUri,
-      client_id: process.env.SPOTIFY_CLIENT_ID,
-      client_secret: process.env.SPOTIFY_CLIENT_SECRET,
-    })
+  const data = qs.stringify({
+    grant_type: "authorization_code",
+    code: req.query.code,
+    redirect_uri: redirectUri
+  });
+
+  axios({
+    method: "post",
+    url: tokenUrl,
+    data: data,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization:
+        "Basic " +
+        Buffer.from(
+          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+        ).toString("base64")
+    }
+  })
     .then((response) => {
-      res.send(response);
+      console.log("SUCESS!!");
+      res.send("YEET");
+      console.log(response);
     })
     .catch((error) => {
-      console.log("error!");
-      res.send(error.message);
+      res.send("ERROR");
+      console.log(error);
     });
 });
 

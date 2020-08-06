@@ -8,21 +8,20 @@ const jwksRsa = require("jwks-rsa");
 require("dotenv/config");
 
 const app = express();
-const serverPort = 4000;
-
-// Auth
+const PORT = 4000;
 
 // Middleware
-app.use(helmet());
 app.use(cors());
-app.use(morgan("combined"));
 
 // Import routes
 const accountRoutes = require("./routes/account");
+const voteRoutes = require("./routes/vote");
 
 // Routes
 app.use("/account", accountRoutes);
+app.use("/vote", voteRoutes);
 
-app.listen(serverPort, () => {
+// Server start
+app.listen(PORT, () => {
   console.log(`Server running on port ${serverPort}...`);
 });
