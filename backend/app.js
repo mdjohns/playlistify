@@ -1,27 +1,36 @@
+import http from "http";
 import express from "express";
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
-const jwt = require("express-jwt");
-const jwksRsa = require("jwks-rsa");
+import cors from "cors";
 require("dotenv/config");
+const webSocket = require("ws");
 
-const app = express();
 const PORT = 4000;
+const app = express();
 
 // Middleware
 app.use(cors());
 
-// Import routes
+// Import and setup routes
 const accountRoutes = require("./routes/account");
-const voteRoutes = require("./routes/vote");
-
-// Routes
 app.use("/account", accountRoutes);
-app.use("/vote", voteRoutes);
 
-// Server start
-app.listen(PORT, () => {
-  console.log(`Server running on port ${serverPort}...`);
+// Create http and ws servers
+const httpServer = http.createServer(app);
+const wss = new webSocket.Server({ server: httpServer });
+
+wss.on("connection", function connection(ws) {
+  console.log("WS connected!");
+  ws.on("message", function incoming(message) {
+    console.log(`received: ${message}`);
+
+    ws.send(
+      JSON.stringify({
+        answer: 42
+      })
+    );
+  });
+});
+
+httpServer.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
 });
