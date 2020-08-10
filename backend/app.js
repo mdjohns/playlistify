@@ -1,6 +1,7 @@
 import http from "http";
 import express from "express";
 import cors from "cors";
+import { OPEN } from "ws";
 require("dotenv/config");
 const webSocket = require("ws");
 
@@ -16,18 +17,20 @@ app.use("/account", accountRoutes);
 
 // Create http and ws servers
 const httpServer = http.createServer(app);
-const wss = new webSocket.Server({ server: httpServer });
+const io = require("socket.io")(httpServer);
 
-wss.on("connection", function connection(ws) {
-  console.log("WS connected!");
-  ws.on("message", function incoming(message) {
-    console.log(`received: ${message}`);
+// WS logic (test)
+io.on("connection", (socket) => {
+  console.log("Client connected!");
 
-    ws.send(
-      JSON.stringify({
-        answer: 42
-      })
-    );
+  socket.on("message", (msg) => {
+    io.emit("message", msg);
+    console.log("received message");
+    console.log(msg);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected!");
   });
 });
 
