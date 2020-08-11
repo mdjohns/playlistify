@@ -1,9 +1,9 @@
 import http from "http";
 import express from "express";
 import cors from "cors";
-import { OPEN } from "ws";
+import mongoose from "mongoose";
 require("dotenv/config");
-const webSocket = require("ws");
+const db = require("./db");
 
 const PORT = 4000;
 const app = express();
@@ -34,6 +34,8 @@ io.on("connection", (socket) => {
   });
 });
 
+// Start server
 httpServer.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+  console.log("🌊 Starting Express...");
+  console.log(`🎧 Listening on port ${PORT}!`);
 });

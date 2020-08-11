@@ -1,15 +1,15 @@
-import express, { response } from "express";
+import express from "express";
 import axios from "axios";
 import qs from "qs";
-const router = express.Router();
 require("dotenv");
 
+const router = express.Router();
 /*
 *****************************************************
 The Account route serves four endpoints.
 The endpoints only concern a "Host" user.
 1. Register a new Host.
-2. Authorize Playlistify with Host's Spotify account.
+2. Authorize this app with Host's Spotify account.
 3. Link Spotify credentials to Host.
 4. Login as an existing Host.
 *****************************************************
@@ -77,12 +77,12 @@ router.get("/link_spotify", (req, res) => {
     }
   })
     .then((response) => {
-      console.log("SUCESS!!");
-      res.send("YEET");
+      console.log("Spotify successfully authorized and linked to user.");
+      res.send({ message: "Spotify succesfully authorized." });
       console.log(response);
     })
     .catch((error) => {
-      res.send("ERROR");
+      res.send({ message: error.message });
       console.log(error);
     });
 });
