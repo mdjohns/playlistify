@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import io, { Socket } from "socket.io-client";
+import VoteSuggest from "./components/VoteSuggest";
 
 function App() {
   let socket;
   useEffect(() => {
-    socket = io("http://localhost:4000/");
-
-    socket.on("message", (message) => {
-      console.log("Socket server message", message);
-      let output = document.getElementById("display_box");
-      output.append(`${message}\n`);
-    });
+    // socket = io("http://localhost:4000/");
+    // socket.on("message", (message) => {
+    //   console.log("Socket server message", message);
+    //   let output = document.getElementById("display_box");
+    //   output.append(`${message}\n`);
+    // });
   });
 
   //let socket = new WebSocket("ws://localhost:4000/");
@@ -46,12 +46,7 @@ function App() {
   };
   return (
     <div className="App">
-      <button onClick={openSocket}>Open WS</button>
-      <input type="text" id="text_input" />
-      <button onClick={submitText}>Submit</button>
-      <div>
-        <textarea readOnly id="display_box" />
-      </div>
+      <VoteSuggest />
     </div>
   );
 }
