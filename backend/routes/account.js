@@ -1,9 +1,28 @@
 import express from "express";
 import axios from "axios";
 import qs from "qs";
-require("dotenv");
+import mongoose from "mongoose";
+import Host from "../models/host";
+import dotenv from "dotenv";
+import { passportJwtSecret } from "jwks-rsa";
+dotenv.config();
 
 const router = express.Router();
+const SpotifyStrategy = require("passport-spotify").Strategy;
+
+passport.use(
+  new SpotifyStrategy({
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    callbackURL: redirectUri
+  }),
+  function (accessToken, refreshToken, expires_in, profile, done) {
+    Host.findOrCreate({ spotifyId: profileId }, function (err, user) {
+      return done(err, user);
+    });
+  }
+);
+
 /*
 *****************************************************
 The Account route serves four endpoints.
@@ -26,7 +45,7 @@ const scopes = [
   "user-read-playback-position",
   "streaming",
   "playlist-modify-public"
-].join(" ");
+];
 
 let tokenPayload = {
   grant_type: "authorization_code",
@@ -35,6 +54,22 @@ let tokenPayload = {
   client_id: process.env.SPOTIFY_CLIENT_ID,
   client_secret: process.env.SPOTIFY_CLIENT_SECRET
 };
+
+router.get(
+  "/auth/spotify",
+  passport.authenticate("spotify"),
+  { scope: scopes, showDialogue: true },
+  function (req, res) {}
+);
+
+router.get(
+  "/auth/spotify/callback",
+  passport.authenticate("spotify", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/");
+  }
+);
 
 router.post("/register", (req, res) => {
   res.send("Registration endpoint!");

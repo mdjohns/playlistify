@@ -1,19 +1,24 @@
 import http from "http";
 import express from "express";
-import cors from "cors";
 import mongoose from "mongoose";
-require("dotenv/config");
-const db = require("./db");
+import dotenv from "dotenv";
+const passport = require("passport");
+const cors = require("cors");
 
+dotenv.config();
+
+const db = require("./db");
 const PORT = 4000;
 const app = express();
 
 // Middleware
-app.use(cors());
 
+app.options("*", cors());
+app.use(passport.initialize());
+app.use(cors());
 // Import and setup routes
-const accountRoutes = require("./routes/account");
-app.use("/account", accountRoutes);
+const spotifyRoutes = require("./routes/spotify");
+app.use("/spotify", spotifyRoutes);
 
 // Create http and attach ws server
 const httpServer = http.createServer(app);
