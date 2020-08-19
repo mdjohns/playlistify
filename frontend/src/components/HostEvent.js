@@ -1,25 +1,18 @@
 import React, { useState } from "react";
 
 const HostEvent = () => {
-  const [name, setName] = useState("");
-
-  const handleChange = (e) => {
-    setName(e.target.value);
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch("http://localhost:4000/spotify/auth");
-  };
   return (
     <div>
-      <h3>
-        Choose a display name and continue to authorize your Spotify account!
-      </h3>
-      <form onSubmit={handleSubmit}>
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" onChange={handleChange} />
-        <button>Continue</button>
-      </form>
+      <h1>Host Event</h1>
+      <p>Click below to authorize the Playlistify app with Spotify.</p>
+      <p>
+        Once authorized, you will choose a display name and be placed in your
+        event.
+      </p>
+
+      <button>
+        <a href="http://localhost:5000/spotify/auth">Authorize Spotify</a>
+      </button>
     </div>
   );
 };

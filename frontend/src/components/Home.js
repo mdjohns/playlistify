@@ -16,6 +16,10 @@ const Home = () => {
       <button>
         <Link to="/join">Join Event</Link>
       </button>
+
+      <button>
+        <Link to="/spotify">Spotify</Link>
+      </button>
     </div>
   );
 };

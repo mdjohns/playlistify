@@ -1,17 +1,9 @@
 import React from "react";
 
 const SpotifyTest = () => {
-  const go = () => {
-    fetch("http://localhost:4000/spotify/login", {
-      mode: "cors",
-      redirect: "follow"
-    }).then((res) => {
-      console.log(res);
-    });
-  };
   return (
     <button>
-      <a href="http://localhost:4000/spotify/login">Go</a>
+      <a href="http://localhost:5000/spotify/auth">Go</a>
     </button>
   );
 };

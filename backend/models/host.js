@@ -1,24 +1,27 @@
-import mongoose from "mongoose";
-import bcryptjs from "bcryptjs";
-
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
+//TODO: delete, merged this with Guest
 
 const HostSchema = new Schema({
   name: {
+    type: String
+  },
+  spotifyId: {
     type: String,
     required: true
   },
-  spotifyId: {
-    type: String
-  },
   spotifyAccessToken: {
-    type: String
+    type: String,
+    required: true
   },
   spotifyRefreshToken: {
-    type: String
+    type: String,
+    required: true
   },
-  associatedEvent: {
-    type: String
+  event: {
+    type: String,
+    required: true
   }
 });
 

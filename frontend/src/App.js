@@ -7,6 +7,7 @@ import JoinEvent from "./components/JoinEvent";
 import Home from "./components/Home";
 import Nav from "./components/Nav";
 import SpotifyTest from "./components/SpotifyTest";
+import Test from "./components/Test";
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
       <div className="App">
         <Nav />
         <Switch>
+          <Route path="/test">
+            <Test />
+          </Route>
           <Route path="/host">
             <HostEvent />
           </Route>
