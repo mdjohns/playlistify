@@ -19,4 +19,4 @@ const SuggestionSchema = new Schema({
   }
 });
 
-module.exports(mongoose.model("Suggestion", SuggestionSchema));
+module.exports = SuggestionSchema;

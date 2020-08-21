@@ -11,7 +11,8 @@ A Guest attends an Event.
 const GuestSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   suggestions: {
     type: [Suggestion]
@@ -26,4 +27,5 @@ const GuestSchema = new Schema({
   }
 });
 
-module.exports("Guest", GuestSchema);
+module.exports = mongoose.model("Guest", GuestSchema)
+//module.exports = GuestSchema;

@@ -12,19 +12,20 @@ Successful suggestions are added to playlistTracks.
 const EventSchema = new Schema({
   joinCode: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   spotifyCredentials: {
     type: SpotifyCredentials,
-    required: true
+    required: true,
+    unique: true
   },
   hostName: {
     type: String
   },
-  guests: {
-    type: [Guest]
-  },
-  playlistTracks: {
-    type: [Suggestion]
-  }
+  guests: [{ type: Schema.Types.ObjectId, ref: 'Guest' }],
+  playlistTracks: [Suggestion]
+
 });
+
+module.exports = mongoose.model("Event", EventSchema);

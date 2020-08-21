@@ -9,11 +9,7 @@ const SpotifyCredentialsSchema = new Schema({
   refreshToken: {
     type: String,
     required: true
-  },
-  expiresIn: {
-    type: String,
-    required: true
   }
 });
 
-module.exports("SpotifyCredentials", SpotifyCredentialsSchema);
+module.exports = SpotifyCredentialsSchema;

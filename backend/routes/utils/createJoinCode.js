@@ -9,4 +9,4 @@ const createJoinCode = (length = 4) => {
   return result.join("").toUpperCase();
 };
 
-export default createJoinCode;
+module.exports = createJoinCode;

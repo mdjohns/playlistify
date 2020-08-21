@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
-import VoteSuggest from "./components/VoteSuggest";
-import HostEvent from "./components/HostEvent";
-import JoinEvent from "./components/JoinEvent";
+import HostEvent from "./components/registration/HostEvent";
+import JoinEvent from "./components/registration/JoinEvent";
 import Home from "./components/Home";
 import Nav from "./components/Nav";
-import SpotifyTest from "./components/SpotifyTest";
-import Test from "./components/Test";
+import EventHome from './components/event/EventHome';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Nav />
+
         <Switch>
-          <Route path="/test">
-            <Test />
+          <Route path="/event">
+            <EventHome />
           </Route>
           <Route path="/host">
             <HostEvent />
-          </Route>
-          <Route path="/spotify">
-            <SpotifyTest />
           </Route>
           <Route path="/join">
             <JoinEvent />

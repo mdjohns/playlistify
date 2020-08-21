@@ -1,125 +1,119 @@
-import express from "express";
-import axios from "axios";
-import qs from "qs";
-import mongoose from "mongoose";
-import Host from "../models/host";
-import dotenv from "dotenv";
-import { passportJwtSecret } from "jwks-rsa";
+const express = require("express");
+const querystring = require("querystring");
+const dotenv = require("dotenv");
+const passport = require("passport");
+const SpotifyStrategy = require("passport-spotify").Strategy;
+const router = express.Router();
+const Event = require("../models/event");
+const createJoinCode = require("./utils/createJoinCode");
+const Guest = require("../models/guest");
 dotenv.config();
 
-const router = express.Router();
-const SpotifyStrategy = require("passport-spotify").Strategy;
-
-passport.use(
-  new SpotifyStrategy({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
-    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    callbackURL: redirectUri
-  }),
-  function (accessToken, refreshToken, expires_in, profile, done) {
-    Host.findOrCreate({ spotifyId: profileId }, function (err, user) {
-      return done(err, user);
-    });
-  }
-);
-
-/*
-*****************************************************
-The Account route serves four endpoints.
-The endpoints only concern a "Host" user.
-1. Register a new Host.
-2. Authorize this app with Host's Spotify account.
-3. Link Spotify credentials to Host.
-4. Login as an existing Host.
-*****************************************************
-*/
-
-// External Spotify URLs & resources
-const initialAuthUrl = "https://accounts.spotify.com/authorize"; // GET
-const tokenUrl = "https://accounts.spotify.com/api/token"; // POST
-const redirectUri = "http://localhost:3000"; // where to redirect after authorization
 const scopes = [
   "user-read-playback-state",
   "user-modify-playback-state",
   "user-read-currently-playing",
   "user-read-playback-position",
+  "user-read-private",
   "streaming",
   "playlist-modify-public"
 ];
 
-let tokenPayload = {
-  grant_type: "authorization_code",
-  code: "", // returned from initial req
-  redirect_uri: redirectUri,
-  client_id: process.env.SPOTIFY_CLIENT_ID,
-  client_secret: process.env.SPOTIFY_CLIENT_SECRET
-};
+const redirectUrl = "http://localhost:3000/test";
+
+passport.serializeUser((user, cb) => {
+  cb(null, user);
+});
+
+passport.deserializeUser((user, cb) => {
+  cb(null, user);
+});
+
+passport.use(
+  new SpotifyStrategy(
+    {
+      clientID: process.env.SPOTIFY_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      callbackURL: process.env.SPOTIFY_CALLBACK_URL
+    },
+    function (accessToken, refreshToken, profile, done) {
+      /*
+      TODO: 
+      update this function to use the new model changes to event and guest
+      - create a new event using these spotify creds
+      - create a new guest for this user (isHost==true), might have to be on a diff endpoint
+      - add new guest to event's guest array and populate host field
+      */
+      Event.findOne(
+        {
+          'spotifyCredentials.accessToken': accessToken
+        },
+        function (err, event) {
+          if (err) {
+            return done(err);
+          }
+          if (!event) {
+            console.log("❗No event found..creating new one");
+            const newJoinCode = createJoinCode();
+            event = new Event({
+              joinCode: newJoinCode,
+              spotifyCredentials: {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+              }
+            });
+            console.log(`👍 New Event created: ${event.joinCode}`);
+            console.log(`⚡ New Guest created!`)
+            const eventHost = new Guest({
+              name: "temp", // will be overridden later
+              event: newJoinCode,
+              isHost: true
+            })
+
+            event.save(function (err) {
+              if (err) console.log(err);
+              return done(err, event);
+            });
+            eventHost.save(function (err) {
+              if (err) console.log(err);
+              return done(err, eventHost);
+            })
+          } else {
+            console.log(`✅ Found existing event: ${event.joinCode}`);
+            return done(err, event);
+          }
+        }
+      );
+    }
+  )
+);
+
+router.use(passport.initialize());
 
 router.get(
   "/auth/spotify",
-  passport.authenticate("spotify"),
-  { scope: scopes, showDialogue: true },
-  function (req, res) {}
-);
-
-router.get(
-  "/auth/spotify/callback",
-  passport.authenticate("spotify", { failureRedirect: "/login" }),
+  passport.authenticate("spotify", {
+    scope: scopes,
+    showDialog: true
+  }),
   function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect("/");
+    // The request will be redirected to spotify for authentication, so this
+    // function will not be called.
   }
 );
 
-router.post("/register", (req, res) => {
-  res.send("Registration endpoint!");
-});
-
-router.post("/login", (req, res) => {
-  res.send("Login endpoint!");
-});
-
-router.get("/authorize_spotify", (req, res) => {
-  res.redirect(
-    initialAuthUrl +
-      "?response_type=code" +
-      "&client_id=" +
-      process.env.SPOTIFY_CLIENT_ID +
-      (scopes ? "&scope=" + encodeURIComponent(scopes) : "") +
-      "&redirect_uri=" +
-      encodeURIComponent(redirectUri)
-  );
-});
-
-router.get("/link_spotify", (req, res) => {
-  const data = qs.stringify({
-    grant_type: "authorization_code",
-    code: req.query.code,
-    redirect_uri: redirectUri
-  });
-
-  axios({
-    method: "post",
-    url: tokenUrl,
-    data: data,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization:
-        "Basic " +
-        Buffer.from(
-          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-        ).toString("base64")
-    }
-  })
-    .then((response) => {
-      console.log("Spotify successfully authorized and linked to user.");
-      res.send({ message: "Spotify succesfully authorized." });
-      console.log(response);
+router.get(
+  "/auth/callback",
+  passport.authenticate("spotify", {
+    failureRedirect: process.env.SPOTIFY_CALLBACK_URL
+  }),
+  function (req, res) {
+    const qs = querystring.stringify({
+      "join_code": req.user.joinCode
     })
-    .catch((error) => {
-      res.send({ message: error.message });
-      console.log(error);
-    });
-});
+    res.redirect(redirectUrl + "?" + qs);
+  }
+);
+
 
 module.exports = router;
