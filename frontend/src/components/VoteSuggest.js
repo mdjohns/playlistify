@@ -15,7 +15,7 @@ const VoteSuggest = () => {
     return () => {
       socket.disconnect();
     };
-  }, socket);
+  }, [socket]);
 
   useEffect(() => {
     socket.on("suggest", (msg) => {

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Search from '../Search';
 import queryString from 'query-string';
 
-const EventHome = () => {
+const EventHome = (props) => {
     const [name, setName] = useState("name");
     const [joinCode, setJoinCode] = useState("");
 
@@ -20,6 +21,7 @@ const EventHome = () => {
             <h3>Event</h3>
             <pre>Hi, {name}</pre>
             <pre>Welcome to {joinCode}</pre>
+            <Search name={"Find a Song!"} inputValue={name} handleInput={setName} />
         </div>
     )
 }

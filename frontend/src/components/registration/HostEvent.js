@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import PageTitle from '../PageTitle';
 
 const HostEvent = () => {
   return (
-    <div>
-      <h1>Host Event</h1>
+    <>
+      <PageTitle title={"Host Event"} />
       <p>Click below to authorize the Playlistify app with Spotify.</p>
       <p>
         Once authorized, you will choose a display name and be placed in your
@@ -11,9 +12,9 @@ const HostEvent = () => {
       </p>
 
       <button>
-        <a href="http://localhost:5000/spotify/auth">Authorize Spotify</a>
+        <a href="http://localhost:5000/account/auth/spotify">Authorize Spotify</a>
       </button>
-    </div>
+    </>
   );
 };
 
