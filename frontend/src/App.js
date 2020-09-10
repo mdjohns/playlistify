@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import { ThemeProvider, CSSReset, Flex } from "@chakra-ui/core";
 import "./App.css";
+import playlistifyTheme from "./theme";
 import HostEvent from "./components/registration/HostEvent";
-import SelectName from './components/registration/HostEvent/SelectName'
+import SelectName from "./components/registration/HostEvent/SelectName";
 import JoinEvent from "./components/registration/JoinEvent";
+import AppContainer from "./components/AppContainer";
 import Home from "./components/Home";
-import NavBar from "./components/NavBar";
-import EventHome from './components/event/EventHome';
-import SpotifyLogo from './image/SpotifyIcon.png'
+import NavBar from "./components/Nav/NavBar";
+import EventHome from "./components/event/EventHome";
+import SpotifyLogo from "./image/SpotifyIcon.png";
 function App() {
-  const [joinCode, setJoinCode] = useState("");
+  const [joinCode, setJoinCode] = useState("TEST");
   return (
-    <ThemeProvider>
+    <ThemeProvider theme={playlistifyTheme}>
       <CSSReset />
-      <Router>
-        <div className="App">
-          <NavBar title={"Playlistify"} joinCode={joinCode} image={SpotifyLogo} />
+      <AppContainer>
+        <Router>
+          <NavBar
+            title={"Playlistify"}
+            joinCode={joinCode}
+            image={SpotifyLogo}
+            displayName={"Dylan"}
+          />
 
           <Switch>
             <Route path="/event">
@@ -38,10 +45,9 @@ function App() {
               <Home />
             </Route>
           </Switch>
-        </div>
-      </Router>
+        </Router>
+      </AppContainer>
     </ThemeProvider>
-
   );
 }
 

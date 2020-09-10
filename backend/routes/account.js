@@ -37,16 +37,9 @@ passport.use(
       callbackURL: process.env.SPOTIFY_CALLBACK_URL
     },
     function (accessToken, refreshToken, profile, done) {
-      /*
-      TODO: 
-      update this function to use the new model changes to event and guest
-      - create a new event using these spotify creds
-      - create a new guest for this user (isHost==true), might have to be on a diff endpoint
-      - add new guest to event's guest array and populate host field
-      */
       Event.findOne(
         {
-          'spotifyCredentials.accessToken': accessToken
+          'spotifyCredentials.userId': profile.id
         },
         function (err, event) {
           if (err) {
@@ -59,7 +52,8 @@ passport.use(
               joinCode: newJoinCode,
               spotifyCredentials: {
                 accessToken: accessToken,
-                refreshToken: refreshToken
+                refreshToken: refreshToken,
+                userId: profile.id
               }
             });
             console.log(`👍 New Event created: ${event.joinCode}`);
@@ -69,7 +63,7 @@ passport.use(
               event: newJoinCode,
               isHost: true
             })
-
+            event.guests.push(eventHost);
             event.save(function (err) {
               if (err) console.log(err);
               return done(err, event);

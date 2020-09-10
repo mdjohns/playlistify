@@ -12,7 +12,7 @@ const GuestSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true //TODO: make unique for event, not for all guests
   },
   suggestions: {
     type: [Suggestion]

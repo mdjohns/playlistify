@@ -1,10 +1,11 @@
 import React from 'react';
+import { Heading } from '@chakra-ui/core';
 import PropTypes from 'prop-types';
 
 
 function PageTitle(props) {
     return (
-        <h1>{props.title}</h1>
+        <Heading>{props.title}</Heading>
     )
 }
 

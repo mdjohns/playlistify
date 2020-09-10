@@ -32,6 +32,8 @@ router.post("/join_event", (req, res) => {
         res.status(404).send({ "message": "No event found!" })
       }
       else {
+        // Event exists
+        //TODO: Check for existing guest
         const newGuest = new Guest({
           name: guestName,
           event: code,
