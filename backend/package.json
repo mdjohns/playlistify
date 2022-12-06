@@ -24,7 +24,7 @@
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-spotify": "^1.1.0",
-    "qs": "^6.9.4",
+    "qs": "^6.9.7",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
